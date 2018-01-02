@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>2018</title>
+	<style type="text/css">
+		table {
+		    /*border-collapse: collapse;*/
+		}
+		table tr td, table tr th {
+			width: 100px;
+			height: 30px;
+			text-align: center;
+			border: none;
+		}
+		table tr td:last-child {
+			width: 300px;
+			height: 30px;
+			background: #fff !important;
+			border: none;
+		}
+		div {
+			height: 100%;
+			background: #0f0;
+		}
+		a {
+			text-decoration: none;
+		}
+		.stripe {
+			background: rgb(187, 255, 255);
+		}
+		.less {
+			background: #ee3;
+		}
+		.bar {
+			background: #0f0;
+		}
+	</style>
+</head>
+<body>
+	<table id='player_info'>
+		<tr>
+			<th>玩家id</th>
+			<th>截止分</th>
+			<th>近期最高分</td>
+			<th>月ca场数</td>
+			<th style="cursor: pointer;color: #e03" id="averge_stats">均分</th>
+			<th>实力条</th>
+		</tr>
+	</table>
+	<p>
+		说明：<br>
+		1、截止分取分时间为12月25日下午7点左右<br>
+		2、点击玩家id可查看该玩家的qlstats个人页面<br>
+		3、近期最高分取最近约50场ca比赛中选手曾达到过的最高分数，且偏差数小于50（即正负号后的数字），场数不足的，以参加的所有ca比赛为准<br>
+		4、均分为截止分与近期最高分的平均值取整，作为选手参考分数<br>
+		5、有些选手ca场数过少分数可能不够准确（最近一个月ca场数小于10场），会被标黄。先选取32个相对比较活跃的选手按均分进行随机平衡分组，共分8组，之后将剩余被标红选手添加到8组选手中，添加方式可以群里讨论<br>
+		6、点击均分可按均分切换从大到小或从小到大的排序
+	</p>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		var player = {
+			0:['zumain',9489,1261,1379,11],
+			1:['xiao6',11310,1450,1511,50],
+			2:['DaJiangYou',38843,1328,1442,135],
+			3:['dolphinarma',79563,1077,1077,35],
+			4:['KEEL',44159,1612,1666,0],
+			5:['DB',27916,1321,1397,0],
+			6:['[X]CCZZ',67673,1382,1434,150],
+			7:['A.O.T|SA1L',73266,1559,1573,225],
+			8:['faye',67617,1430,1548,70],
+			9:['RoundsMan',68719,1441,1561,180],
+			10:['A.O.T|GGQ3',2882,1552,1566,170],
+			11:['CHAOZ',154901,741,779,5],
+			12:['machinecatII',68697,1399,1510,100],
+			13:['QLlikeML',67277,1492,1506,80],
+			14:['M1SG',45421,1462,1494,200],
+			15:['fisher',22736,1416,1470,170],
+			16:['Cherrybomb',68432,1474,1528,180],
+			17:['A.O.T|SF.',24178,1421,1495,10],
+			18:['Mushroom',95490,1715,1715,7],
+			19:['ZeRo5',67547,1261,1317,110],			
+			20:['9sky',44959,1639,1740,80],
+			21:['HaMMer',58259,1475,1478,25],
+			22:['团子',60791,1041,1041,0],
+			23:['A.O.T|kris',182085,912,988,0],
+			24:['A.O.T|TODD',44800,1557,1626,70],
+			25:['ping999',86736,1221,1355,60],
+			26:['ZLC',69303,1358,1454,40],
+			27:['PACMAN',19729,1602,1706,10],
+			28:['architc',155225,1210,1276,120],
+			29:['MNILDS',68517,1432,1541,50],
+			30:['A.O.T|Error',78449,1215,1341,6],
+			31:['A.O.T|rey',114518,1475,1549,100],
+			32:['A.O.T|ZKS',156849,1271,1377,50],
+			33:['A.O.T|Fenix3',98018,1413,1506,110],
+			34:['Chocolala',67616,1500,1624,60],
+			35:['DaKengHuo',92973,1187,1231,30],
+			36:['ataala',16137,1591,1632,240],
+			37:['SBl!ve',18994,1541,1565,450],
+			38:['A.O.T|nicklu',62978,1644,1644,170],
+			39:['Alex',67349,1289,1335,150],
+			40:['[X]kid',38786,1201,1239,110],
+			41:['aZhe',226704,1337,1337,0],
+			42:['benny',226916,1580,1588,8]
+		}
+		var all = 0;
+		$.each(player,function(i,e){
+			if(e[4] < 10){
+				$('#player_info').append('<tr class="less"><td><a href="http://qlstats.net:8080/player/'+e[1]+'">'+e[0]+'</a></td><td>'+e[2]+'</td><td>'+e[3]+'</td><td>'+e[4]+'</td><td class="averge">'+Math.floor((e[2]+e[3])/2)+'</td><td><div style="width:'+(Math.floor((e[2]+e[3])/2)/1715)*100+'%"></div></td></tr>');
+			}else{
+				$('#player_info').append('<tr><td><a href="http://qlstats.net:8080/player/'+e[1]+'">'+e[0]+'</a></td><td>'+e[2]+'</td><td>'+e[3]+'</td><td>'+e[4]+'</td><td class="averge">'+Math.floor((e[2]+e[3])/2)+'</td><td><div style="width:'+(Math.floor((e[2]+e[3])/2)/1715)*100+'%"></div></td></tr>');
+			}
+			all += Math.floor((e[2]+e[3])/2);
+		});
+		console.log(all/43);
+		$('#player_info tr:even').addClass('stripe');
+		
+		var n = 0;
+	    $('#averge_stats').click(function(){
+	    	if(n == 1){
+	    		$('#player_info tr').removeClass('stripe');
+	    		for(i = 0;i < $('tr:gt(0)').length;i++){
+	    			$('tr:gt(0)').each(function(){
+	    				if(Number($(this).children('.averge').text()) > Number($(this).next().children('.averge').text())){	
+	    				    $(this).next().after($(this));
+	    				}
+	    			});
+	    		}
+	    		n = 0;
+	    	}else{
+	    		$('#player_info tr').removeClass('stripe');
+	    		for(i = 0;i < $('tr:gt(0)').length;i++){
+	    			$('tr:gt(0)').each(function(){
+	    				if(Number($(this).children('.averge').text()) < Number($(this).next().children('.averge').text())){	
+	    				    $(this).next().after($(this));
+	    				}
+	    			});
+	    		}
+	    		n = 1;
+	    	}   
+	    	$('#player_info tr:even').addClass('stripe');	
+	    });
+	</script>
+</body>
+</html>
